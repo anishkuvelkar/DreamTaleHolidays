@@ -15,7 +15,7 @@ const Navbar = ({ setActiveSection }) => {
     { name: "Contact", key: "contact" },
   ];
 
-  // Highlight active link on page load
+  
   useEffect(() => {
     if (window.location.hash) {
       setActiveLink(window.location.hash.replace("#", ""));
