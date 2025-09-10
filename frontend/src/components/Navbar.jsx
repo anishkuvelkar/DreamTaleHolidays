@@ -5,7 +5,7 @@ import logo from "../images/logo.png";
 const Navbar = ({ setActiveSection }) => {
   const [isOpen, setIsOpen] = useState(false); // mobile menu
   const [activeLink, setActiveLink] = useState("home");
-  const [isInfoOpen, setIsInfoOpen] = useState(false); // new side panel
+  const [isInfoOpen, setIsInfoOpen] = useState(false); // info panel
 
   const navLinks = [
     { name: "Home", key: "home" },
@@ -15,16 +15,35 @@ const Navbar = ({ setActiveSection }) => {
     { name: "Contact", key: "contact" },
   ];
 
+  // Highlight active link on page load
   useEffect(() => {
     if (window.location.hash) {
       setActiveLink(window.location.hash.replace("#", ""));
     }
+
+    const handleScroll = () => {
+      navLinks.forEach((link) => {
+        const section = document.getElementById(link.key);
+        if (section) {
+          const top = section.getBoundingClientRect().top;
+          if (top <= 100 && top >= -section.offsetHeight + 100) {
+            setActiveLink(link.key);
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNavClick = (key) => {
     setActiveSection(key);
     setActiveLink(key);
-    window.location.hash = key;
+    const section = document.getElementById(key);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
     setIsOpen(false);
   };
 
@@ -46,9 +65,8 @@ const Navbar = ({ setActiveSection }) => {
               <span
                 key={link.key}
                 onClick={() => handleNavClick(link.key)}
-                className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200 
-                  text-blue-600 
-                  hover:bg-purple-500/20 
+                className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200
+                  text-blue-600 hover:bg-purple-500/20
                   ${activeLink === link.key ? "bg-purple-500/20" : ""}`}
               >
                 {link.name}
@@ -66,7 +84,7 @@ const Navbar = ({ setActiveSection }) => {
               <Menu className="h-8 w-8" />
             </span>
 
-            {/* Info Panel Trigger (Three Dashes ≡) */}
+            {/* Info Panel Trigger */}
             <span
               onClick={() => setIsInfoOpen(true)}
               className="text-blue-600 cursor-pointer text-3xl"
@@ -77,7 +95,7 @@ const Navbar = ({ setActiveSection }) => {
         </div>
       </div>
 
-      {/* Mobile Side Panel */}
+      {/* Mobile Menu */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -98,9 +116,8 @@ const Navbar = ({ setActiveSection }) => {
             <span
               key={link.key}
               onClick={() => handleNavClick(link.key)}
-              className={`block w-full cursor-pointer px-4 py-2 rounded-full mb-2 
-                text-blue-600 
-                hover:bg-purple-500/20 
+              className={`block w-full cursor-pointer px-4 py-2 rounded-full mb-2
+                text-blue-600 hover:bg-purple-500/20
                 ${activeLink === link.key ? "bg-purple-500/20" : ""}`}
             >
               {link.name}
@@ -109,7 +126,7 @@ const Navbar = ({ setActiveSection }) => {
         </div>
       </div>
 
-      {/* Info Side Panel (≡) */}
+      {/* Info Side Panel */}
       <div
         className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
           isInfoOpen ? "translate-x-0" : "translate-x-full"
@@ -135,7 +152,7 @@ const Navbar = ({ setActiveSection }) => {
         </div>
       </div>
 
-      {/* Transparent Overlay — only for hamburger */}
+      {/* Transparent Overlay */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
