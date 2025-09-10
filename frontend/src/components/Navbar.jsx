@@ -3,9 +3,9 @@ import { Menu, X } from "lucide-react";
 import logo from "../images/logo.png";
 
 const Navbar = ({ setActiveSection }) => {
-  const [isOpen, setIsOpen] = useState(false); // mobile menu
+  const [isOpen, setIsOpen] = useState(false); 
   const [activeLink, setActiveLink] = useState("home");
-  const [isInfoOpen, setIsInfoOpen] = useState(false); // info panel
+  const [isInfoOpen, setIsInfoOpen] = useState(false); 
 
   const navLinks = [
     { name: "Home", key: "home" },
